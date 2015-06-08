@@ -29,10 +29,11 @@ func (ctx *Context) setNewSessionID() (sessionID string) {
 
 // SetCookie adds a cookie header to the response.
 func (ctx *Context) GetSessionID() (sessionID string) {
-	cookie, _ := ctx.Request.Cookie(SessionKey)
+    var cookieValue string
+    ctx.GetCookie(SessionKey,&cookieValue)
 
-	if cookie == nil || len(cookie.Value) != sessionIDLen {
+	if cookieValue == "" {
 		return ctx.setNewSessionID()
 	}
-	return cookie.Value
+	return cookieValue
 }
