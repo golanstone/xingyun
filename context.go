@@ -157,7 +157,7 @@ func (ctx *Context) ClientIP() string {
 	if r != "" {
 		return r
 	}
-	return strings.Split(ctx.Request.RemoteAddr, ":")[0]
+	return strings.Trim(strings.Split(ctx.Request.RemoteAddr, ",")[0], " ")
 }
 
 func (ctx *Context) Halt() {
