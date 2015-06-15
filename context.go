@@ -154,10 +154,10 @@ func (ctx *Context) checkHeaderWrite() {
 
 func (ctx *Context) ClientIP() string {
 	r := ctx.Request.Header.Get("X-Forwarded-For")
-	if r != "" {
-		return r
+	if r == "" {
+		r = ctx.Request.RemoteAddr
 	}
-	return strings.Trim(strings.Split(ctx.Request.RemoteAddr, ",")[0], " ")
+	return strings.Trim(strings.Split(r, ",")[0], " ")
 }
 
 func (ctx *Context) Halt() {
