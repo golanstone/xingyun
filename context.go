@@ -138,8 +138,7 @@ func (ctx *Context) parseParams() {
 	var err error
 	err = ctx.Request.ParseMultipartForm(DefaultFormMaxMemmory)
 	if err != nil && err.Error() != http.ErrNotMultipart.Error() {
-		ctx.Logger.Errorf(err.Error())
-		return
+		ctx.Logger.Errorf("request to %s, %s", ctx.Request.RequestURI, err.Error())
 	}
 	for k, v := range ctx.Request.Form {
 		ctx.Params[k] = v[0]
