@@ -22,6 +22,6 @@ func (s *Server) GetLogPipeHandler() PipeHandler {
 		if status >= 400 && status <= 499 {
 			log = s.logger.Warnf
 		}
-		log("%v %s %s %s in %v", res.Status(), r.Method, r.Host, r.RequestURI, time.Since(start))
+		log("%v %s %s %s %s in %v", res.Status(), r.Method, r.Host, r.RequestURI, r.UserAgent(), time.Since(start))
 	})
 }
