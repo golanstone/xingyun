@@ -9,6 +9,7 @@ import (
 type Router interface {
 	Handle(pattern string, h ContextHandler)
 	HandleFunc(pattern string, h ContextHandlerFunc)
+	HandlePrefixFunc(pattern string, h ContextHandlerFunc)
 	Get(pattern string, h ContextHandlerFunc)
 	Post(pattern string, h ContextHandlerFunc)
 	ServeHTTP(w http.ResponseWriter, r *http.Request)
@@ -46,6 +47,10 @@ func (r *router) Handle(path string, h ContextHandler) {
 
 func (r *router) HandleFunc(path string, h ContextHandlerFunc) {
 	r.router.HandleFunc(path, r.getWrapHandler(h).ServeHTTP)
+}
+
+func (r *router) HandlePrefixFunc(path string, h ContextHandlerFunc) {
+	r.router.PathPrefix(path).HandlerFunc(r.getWrapHandler(h).ServeHTTP)
 }
 
 func (r *router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
