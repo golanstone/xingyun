@@ -34,25 +34,27 @@ func (ms *memoryStore) ClearSession(sessionID string, key string) {
 type memcacheStore struct {
 	mc     *memcache.Client
 	logger Logger
+	server *Server
 }
 
-func NewMemcacheStore(addr string, logger Logger) *memcacheStore {
+func NewMemcacheStore(addr string, logger Logger, server *Server) *memcacheStore {
 	return &memcacheStore{
 		mc:     memcache.New(addr),
 		logger: logger,
+		server: server,
 	}
 }
 
 func (ms *memcacheStore) SetSession(sessionID string, key string, data []byte) {
 	_7days := 7 * 24 * int32(time.Hour.Seconds())
-	err := ms.mc.Set(&memcache.Item{Key: sessionID + ":" + key, Value: data, Expiration: _7days})
+	err := ms.mc.Set(&memcache.Item{Key: ms.server.name() + ":" + sessionID + ":" + key, Value: data, Expiration: _7days})
 	if err != nil {
 		ms.logger.Errorf("SetSession %s", err)
 	}
 }
 
 func (ms *memcacheStore) GetSession(sessionID string, key string) []byte {
-	item, err := ms.mc.Get(sessionID + ":" + key)
+	item, err := ms.mc.Get(ms.server.name() + ":" + sessionID + ":" + key)
 	if err != nil {
 		if err != memcache.ErrCacheMiss {
 			ms.logger.Errorf("GetSession %s", err)
@@ -63,7 +65,7 @@ func (ms *memcacheStore) GetSession(sessionID string, key string) []byte {
 }
 
 func (ms *memcacheStore) ClearSession(sessionID string, key string) {
-	err := ms.mc.Delete(sessionID + ":" + key)
+	err := ms.mc.Delete(ms.server.name() + ":" + sessionID + ":" + key)
 	if err != nil {
 		ms.logger.Errorf("ClearSession %s", err)
 	}
