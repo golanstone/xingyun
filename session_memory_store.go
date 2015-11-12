@@ -38,8 +38,10 @@ type memcacheStore struct {
 }
 
 func NewMemcacheStore(addr string, logger Logger, server *Server) *memcacheStore {
+	mc := memcache.New(addr)
+	mc.UseGet = true
 	return &memcacheStore{
-		mc:     memcache.New(addr),
+		mc:     mc,
 		logger: logger,
 		server: server,
 	}
