@@ -1,5 +1,9 @@
 package xingyun
 
+import (
+	"time"
+)
+
 var (
 	SessionKey   string = "ZQSESSID"
 	sessionIDLen int    = 36
@@ -23,14 +27,15 @@ func (ctx *Context) ClearSession(key string) {
 
 func (ctx *Context) setNewSessionID() (sessionID string) {
 	sessionID = newSessionID()
-	ctx.SetCookie(SessionKey, sessionID)
+	_timeout := int64(ctx.Config.SessionTimeout) * int64(time.Minute.Seconds())
+	ctx.SetExpireCookie(SessionKey, sessionID, _timeout)
 	return
 }
 
 // SetCookie adds a cookie header to the response.
 func (ctx *Context) GetSessionID() (sessionID string) {
-    var cookieValue string
-    ctx.GetCookie(SessionKey,&cookieValue)
+	var cookieValue string
+	ctx.GetCookie(SessionKey, &cookieValue)
 
 	if cookieValue == "" {
 		return ctx.setNewSessionID()
