@@ -1,5 +1,9 @@
 package xingyun
 
+import (
+	"time"
+)
+
 const (
 	DefaultSecret = "D893ACDB5B524C6X"
 )
@@ -7,7 +11,8 @@ const (
 type Config struct {
 	EnableDebug bool
 
-	CookieSecret string
+	CookieSecret   string
+	SessionTimeout int32
 
 	StaticDir       string
 	StaticPrefix    string
@@ -33,5 +38,9 @@ func setDefaultConfig(config *Config) {
 	}
 	if config.XSRFSecret == "" {
 		config.XSRFSecret = DefaultSecret
+	}
+	if config.SessionTimeout == 0 {
+		// 7 days
+		config.SessionTimeout = 7 * 24 * int32(time.Hour.Minutes())
 	}
 }
