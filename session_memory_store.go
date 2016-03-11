@@ -48,8 +48,8 @@ func NewMemcacheStore(addr string, logger Logger, server *Server) *memcacheStore
 }
 
 func (ms *memcacheStore) SetSession(sessionID string, key string, data []byte) {
-	_7days := 7 * 24 * int32(time.Hour.Seconds())
-	err := ms.mc.Set(&memcache.Item{Key: ms.server.name() + ":" + sessionID + ":" + key, Value: data, Expiration: _7days})
+	_timeout := ms.server.Config.SessionTimeout * int32(time.Minute.Seconds())
+	err := ms.mc.Set(&memcache.Item{Key: ms.server.name() + ":" + sessionID + ":" + key, Value: data, Expiration: _timeout})
 	if err != nil {
 		ms.logger.Errorf("SetSession %s", err)
 	}
