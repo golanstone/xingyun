@@ -25,6 +25,9 @@ func (ctx *Context) SetExpireCookie(name string, value interface{}, sec int64) {
 	if sec != 0 {
 		cookie.Expires = time.Unix(time.Now().Unix()+sec, 0)
 	}
+	if ctx.Config.CookieDomain != "" {
+		cookie.Domain = ctx.Config.CookieDomain
+	}
 	http.SetCookie(ctx.ResponseWriter, cookie)
 }
 

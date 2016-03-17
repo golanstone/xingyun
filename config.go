@@ -12,6 +12,7 @@ type Config struct {
 	EnableDebug bool
 
 	CookieSecret   string
+	CookieDomain   string
 	SessionTimeout int32
 
 	StaticDir       string
